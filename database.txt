@@ -1,0 +1,20 @@
+{
+  "adf": {
+    "password": "adf",
+    "kills": 0,
+    "deaths": 0,
+    "friends": [
+      "asdf"
+    ],
+    "requests": []
+  },
+  "asdf": {
+    "password": "asdf",
+    "kills": 0,
+    "deaths": 0,
+    "friends": [
+      "adf"
+    ],
+    "requests": []
+  }
+}
