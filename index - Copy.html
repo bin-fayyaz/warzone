@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FPS Multiplayer</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: 'Arial', sans-serif; user-select: none; background: #000; }
+        
+        /* Game Canvas */
+        #game-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+        /* Crosshair (Always on top of game, below lobby) */
+        #crosshair {
+            position: absolute; top: 50%; left: 50%;
+            width: 20px; height: 20px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 50; pointer-events: none;
+            display: none; /* Hidden until game starts */
+        }
+        #crosshair::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 4px; height: 4px; background: red;
+            transform: translate(-50%, -50%); border-radius: 50%;
+        }
+
+        /* In-Game HUD */
+        #ui-layer { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            pointer-events: none; z-index: 60; display: none;
+        }
+        
+        #hud { position: absolute; bottom: 20px; left: 20px; color: white; }
+        .bar { width: 250px; height: 25px; background: rgba(0,0,0,0.5); border: 2px solid #555; }
+        #hp-fill { height: 100%; background: #e94560; width: 100%; transition: width 0.1s; }
+        #ammo-txt { font-size: 24px; text-shadow: 2px 2px 0 #000; margin: 5px 0; }
+        
+        #death-screen {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(150, 0, 0, 0.4); color: white; 
+            align-items: center; justify-content: center; font-size: 50px; font-weight: bold;
+            text-shadow: 0 0 10px #000;
+        }
+
+        /* LOBBY SCREEN - Highest Z-Index */
+        #lobby-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #1a1a2e; color: white; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000; /* Ensure this is on top */
+        }
+
+        /* Form Elements */
+        input, select { padding: 15px; margin: 10px; font-size: 18px; width: 250px; text-align: center; }
+        button { 
+            padding: 15px 30px; margin: 10px; font-size: 20px; 
+            cursor: pointer; background: #0f3460; color: white; border: 2px solid #444; 
+            transition: 0.2s;
+        }
+        button:hover { background: #e94560; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <!-- 1. The Lobby -->
+    <div id="lobby-screen">
+        <h1 style="font-size: 40px; text-shadow: 0 0 20px #00f;">NEON FPS</h1>
+        <p>Enter your details to deploy</p>
+        <input type="text" id="username" placeholder="Codename" value="Soldier">
+        <select id="team-select">
+            <option value="#3498db">Blue Team</option>
+            <option value="#e74c3c">Red Team</option>
+        </select>
+        <button id="join-btn">DEPLOY TO BATTLE</button>
+    </div>
+
+    <!-- 2. The Game UI -->
+    <div id="crosshair"></div>
+    <div id="ui-layer">
+        <div id="hud">
+            <div class="bar"><div id="hp-fill"></div></div>
+            <div id="ammo-txt">Ammo: 30</div>
+            <div style="margin-top:10px; opacity: 0.7; font-size: 14px;">WASD to Move | Click to Shoot</div>
+        </div>
+        <div id="death-screen">CRITICAL DAMAGE<br><span style="font-size:20px">Respawning...</span></div>
+    </div>
+
+    <!-- 3. The 3D Canvas -->
+    <div id="game-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>
